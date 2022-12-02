@@ -295,8 +295,16 @@
 
 <div class="content" role="main">
 
-    <div *ngFor="let temp of this.dniTygodnia">
-        {{temp}}
+    <div class="dnityg">
+        <div class="day" *ngFor="let temp of this.dniTygodnia">
+            {{temp}}
+        </div>
+    </div>
+
+    <div class="dnimiesiaca">
+        <div class="day" *ngFor="let i of this.daysInCal">
+            {{i}}
+        </div>
     </div>
 
 

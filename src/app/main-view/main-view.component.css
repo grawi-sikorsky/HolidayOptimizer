@@ -1,0 +1,29 @@
+.dnityg{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 1fr;
+    width: 80%;
+    height: 40px;
+    text-align: center;
+    border: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    margin: auto;
+}
+.day{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+.dnimiesiaca{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    width: 80%;
+    height: 400px;
+    text-align: center;
+    border: 1px;
+    border-style: solid;
+    border-radius: 5px;
+}
