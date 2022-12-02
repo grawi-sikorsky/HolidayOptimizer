@@ -1,26 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-main-view',
-  templateUrl: './main-view.component.html',
-  styleUrls: ['./main-view.component.css']
+  selector: 'app-month',
+  templateUrl: './month.component.html',
+  styleUrls: ['./month.component.css']
 })
+export class MonthComponent implements OnInit {
 
-export class MainViewComponent implements OnInit{
-  
-  
-  constructor() { }
+  constructor(){ console.log(this.monthToDisplay); }
 
   ngOnInit() {
-    console.log(this.date);
-    console.log(this.firstDayOfMonth);
-    console.log(this.daysInMonth);
-    console.log(this.dniTygodnia);
-    console.log("Pierwszy dzien roku: " + this.firstDayOfYear);
+    console.log("month component: ")
+    console.log(this.monthToDisplay);
     this.setup();
-  }
 
-  months:number[] = new Array(12);
+    console.log(this.monthToDisplay);
+  }
+  
+  @Input('monthToDisplay') monthToDisplay: number = 0;
+
 
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
@@ -29,8 +27,8 @@ export class MainViewComponent implements OnInit{
   // day:number = this.date.getDate();
   // month:number = this.date.getMonth();
   // year:number = this.date.getFullYear();
-  firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
-  daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth()+1, 0).getDate();
+  firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
+  daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
   daysInCal:string[] = [];
 
   firstDayOfYear = new Date(this.date.getFullYear(), 0, 1);
@@ -59,6 +57,4 @@ export class MainViewComponent implements OnInit{
     }
   }
 
-
-  
-} 
+}
