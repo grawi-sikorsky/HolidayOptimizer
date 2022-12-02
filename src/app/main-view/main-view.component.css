@@ -15,6 +15,11 @@
     align-items: center;
     justify-content: center;
     font-weight: 900;
+
+}
+.day:hover{
+    background-color: aquamarine;
+    cursor: pointer;
 }
 .dnimiesiaca{
     display: grid;
