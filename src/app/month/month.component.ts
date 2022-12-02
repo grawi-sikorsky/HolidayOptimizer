@@ -7,6 +7,8 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class MonthComponent implements OnInit {
 
+  @Input() monthToDisplay = 0;
+  
   constructor(){ console.log(this.monthToDisplay); }
 
   ngOnInit() {
@@ -17,25 +19,24 @@ export class MonthComponent implements OnInit {
     console.log(this.monthToDisplay);
   }
   
-  @Input('monthToDisplay') monthToDisplay: number = 0;
 
 
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
   date = new Date();
-  // day:number = this.date.getDate();
-  // month:number = this.date.getMonth();
-  // year:number = this.date.getFullYear();
-  firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
-  daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
   daysInCal:string[] = [];
 
-  firstDayOfYear = new Date(this.date.getFullYear(), 0, 1);
-
   setup(){
+    // day:number = this.date.getDate();
+    // month:number = this.date.getMonth();
+    // year:number = this.date.getFullYear();
+    let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
+    let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
 
-    let dateString = this.firstDayOfMonth.toLocaleDateString('pl-pl', {
+    let firstDayOfYear = new Date(this.date.getFullYear(), 0, 1);
+
+    let dateString = firstDayOfMonth.toLocaleDateString('pl-pl', {
       weekday: 'long',
       year: 'numeric',
       month: 'numeric',
@@ -47,7 +48,7 @@ export class MonthComponent implements OnInit {
     console.log("dateString: " + dateString);
     console.log("Paddington: " + paddington);
 
-    for(let i = 1; i<=this.daysInMonth; i++){
+    for(let i = 1; i<=daysInMonth; i++){
       this.daysInCal.push(i.toString());
     }
     if(paddington > 0){

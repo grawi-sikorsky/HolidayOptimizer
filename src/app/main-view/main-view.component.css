@@ -9,7 +9,8 @@
 
 .month {
     display: grid;
-    margin: 5px;
+    margin: 8px;
+    margin-bottom: 15px;
     min-width: 250px;
     max-width: 350px;
 }
