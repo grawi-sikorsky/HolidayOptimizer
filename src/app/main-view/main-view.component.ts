@@ -20,7 +20,6 @@ export class MainViewComponent implements OnInit{
 
   setup(){
 
-
     let dateString = this.firstDayOfMonth.toLocaleDateString('pl-pl', {
       weekday: 'long',
       year: 'numeric',
