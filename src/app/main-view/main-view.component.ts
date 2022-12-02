@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main-view',
@@ -7,16 +7,34 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class MainViewComponent implements OnInit{
-
+  
+  
   constructor() { }
 
-
   ngOnInit() {
+    console.log(this.date);
     console.log(this.firstDayOfMonth);
     console.log(this.daysInMonth);
     console.log(this.dniTygodnia);
+    console.log("Pierwszy dzien roku: " + this.firstDayOfYear);
     this.setup();
   }
+
+  months:number[] = new Array(12);
+
+  dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
+  dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
+  miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
+
+  date = new Date();
+  // day:number = this.date.getDate();
+  // month:number = this.date.getMonth();
+  // year:number = this.date.getFullYear();
+  firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+  daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth()+1, 0).getDate();
+  daysInCal:string[] = [];
+
+  firstDayOfYear = new Date(this.date.getFullYear(), 0, 1);
 
   setup(){
 
@@ -26,12 +44,11 @@ export class MainViewComponent implements OnInit{
       month: 'numeric',
       day: 'numeric',
     });
-    let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
-    for (let i = 0; i<paddington; i++){
 
-    }
-    console.log(dateString);
-    console.log(paddington);
+    let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
+
+    console.log("dateString: " + dateString);
+    console.log("Paddington: " + paddington);
 
     for(let i = 1; i<=this.daysInMonth; i++){
       this.daysInCal.push(i.toString());
@@ -43,16 +60,6 @@ export class MainViewComponent implements OnInit{
     }
   }
 
-  dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
 
-  date = new Date();
-  day:number = this.date.getDate();
-  month:number = this.date.getMonth();
-  year:number = this.date.getFullYear();
-
-  firstDayOfMonth = new Date(this.year, this.month, 1);
-  daysInMonth = new Date(this.year, this.month+1, 0).getDate();
-
-  daysInCal:string[] = [];
   
 } 
