@@ -5,7 +5,9 @@
             {{temp}}
         </div>
         <div class="day" *ngFor="let i of this.daysInCal">
-            {{i}}
+            <div [ngClass]="isWeekend() ? 'weekend' : '' ">
+                {{i}}
+            </div>
         </div>
     </div>
 

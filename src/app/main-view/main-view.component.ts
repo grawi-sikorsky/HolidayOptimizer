@@ -12,11 +12,6 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    console.log(this.date);
-    console.log(this.firstDayOfMonth);
-    console.log(this.daysInMonth);
-    console.log(this.dniTygodnia);
-    console.log("Pierwszy dzien roku: " + this.firstDayOfYear);
     this.setup();
   }
 
@@ -27,9 +22,7 @@ export class MainViewComponent implements OnInit{
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 
   date = new Date();
-  // day:number = this.date.getDate();
-  // month:number = this.date.getMonth();
-  // year:number = this.date.getFullYear();
+  
   firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
   daysInMonth = new Date(this.date.getFullYear(), this.date.getMonth()+1, 0).getDate();
   daysInCal:string[] = [];
@@ -46,9 +39,6 @@ export class MainViewComponent implements OnInit{
     });
 
     let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
-
-    console.log("dateString: " + dateString);
-    console.log("Paddington: " + paddington);
 
     for(let i = 1; i<=this.daysInMonth; i++){
       this.daysInCal.push(i.toString());

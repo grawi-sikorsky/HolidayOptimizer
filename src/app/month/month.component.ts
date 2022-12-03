@@ -9,17 +9,13 @@ export class MonthComponent implements OnInit {
 
   @Input() monthToDisplay = 0;
   
-  constructor(){ console.log(this.monthToDisplay); }
+  constructor(){ }
 
   ngOnInit() {
     console.log("month component: ")
-    console.log(this.monthToDisplay);
     this.setup();
-
-    console.log(this.monthToDisplay);
+    this.isWeekend();
   }
-  
-
 
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
@@ -28,9 +24,7 @@ export class MonthComponent implements OnInit {
   daysInCal:string[] = [];
 
   setup(){
-    // day:number = this.date.getDate();
-    // month:number = this.date.getMonth();
-    // year:number = this.date.getFullYear();
+
     let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
     let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
 
@@ -56,6 +50,18 @@ export class MonthComponent implements OnInit {
         this.daysInCal.unshift("");
       }
     }
+  }
+
+  isWeekend(){
+    if(this.monthToDisplay === 0){
+      console.log("nowy rok");
+      return true;
+    }
+    return false;
+  }
+
+  isHoliday(){
+
   }
 
 }
