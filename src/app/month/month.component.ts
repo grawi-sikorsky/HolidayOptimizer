@@ -76,8 +76,8 @@ export class MonthComponent implements OnInit {
 
   holidayAssign(){
     if(this.monthToDisplay === 0){  // styczen
-      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );  // nowy rok
-      this.days.find( e => e.day==="6" ? e.isHoliday = true : e.isHoliday = false );  // 'szesciu' kroli
+      this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // nowy rok
+      this.days.find( e => { if(e.day==="6") e.isHoliday = true } );      // 'szesciu' kroli
     }
     else if(this.monthToDisplay === 1){ // luty
     }
@@ -86,30 +86,31 @@ export class MonthComponent implements OnInit {
     else if(this.monthToDisplay === 3){ // kwiecien
     }
     else if(this.monthToDisplay === 4){ // maj
-      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );  // sw pracy
-      this.days.find( e => e.day==="3" ? e.isHoliday = true : e.isHoliday = false );  // konstytuszyn
+      this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // sw pracy
+      this.days.find( e => { if(e.day==="3") e.isHoliday = true } );      // konstytuszyn
     }
     else if(this.monthToDisplay === 5){ // czerwiec
     }
     else if(this.monthToDisplay === 6){ // lipiec
     }
     else if(this.monthToDisplay === 7){ // sierpien
-      this.days.find( e => e.day==="15" ? e.isHoliday = true : e.isHoliday = false );  // wniebowziecie
+      this.days.find( e => { if(e.day==="15") e.isHoliday = true } );      // wniebowziecie
     }
     else if(this.monthToDisplay === 8){ // wrzesien
     }
     else if(this.monthToDisplay === 9){ // pazdziernik
     }
     else if(this.monthToDisplay === 10){ // listopad
-      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );    // wszystkich swintych
-      this.days.find( e => e.day==="11" ? e.isHoliday = true : e.isHoliday = false );   // niepodleglosc
+      this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // wszystkich swintych
+      this.days.find( e => { if(e.day==="11") e.isHoliday = true } );     // niepodleglosc
     }
     else if(this.monthToDisplay === 11){ // grudzien
-      this.days.find( e => e.day==="24" ? e.isHoliday = true : e.isHoliday = false );  // wigilia
-      this.days.find( e => e.day==="25" ? e.isHoliday = true : e.isHoliday = false );  // 1 day
-      this.days.find( e => e.day==="26" ? e.isHoliday = true : e.isHoliday = false );  // 2 day
+      this.days.find( e => { if(e.day==="24") e.isHoliday = true } );     // wigilia
+      this.days.find( e => { if(e.day==="25") e.isHoliday = true } );     // 1 day
+      this.days.find( e => { if(e.day==="26") e.isHoliday = true } );     // 2 day
     }
 
+    console.log(this.days);
 
   }
 

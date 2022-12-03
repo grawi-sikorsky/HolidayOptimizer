@@ -11,16 +11,17 @@
     align-items: center;
     justify-content: center;
     font-weight: 300;
+    border-radius: 5px;
+
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-duration: 0.5s;
 }
 
 .day:hover {
-    background-color: aquamarine;
+    background-color: rgb(156, 202, 252);
     cursor: pointer;
-}
-
-.day:hover {
-    background-color: aquamarine;
-    cursor: pointer;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-duration: 0.5s;
 }
 
 .day-caption {
@@ -29,6 +30,7 @@
     justify-content: center;
     font-weight: 600;
     font-size: 10px;
+    border-radius: 5px;
 }
 
 .day-caption:hover {
@@ -55,4 +57,5 @@
     font-size: 14px;
     font-weight: 600;
     color: crimson;
+    background-color: #ffe9e9;
 }
