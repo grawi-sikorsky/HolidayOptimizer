@@ -49,5 +49,10 @@
 }
 
 .weekend{
-    background-color:brown;
+    color: crimson;
+}
+.holiday{
+    font-size: 14px;
+    font-weight: 600;
+    color: crimson;
 }

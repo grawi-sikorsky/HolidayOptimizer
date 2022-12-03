@@ -10,28 +10,23 @@ export class MonthComponent implements OnInit {
 
   @Input() monthToDisplay = 0;
   
-  constructor(){ }
+  constructor(){  }
 
   ngOnInit() {
-    console.log("month component: ")
     this.setup();
-    this.isWeekend();
+    this.holidayAssign();
   }
-
-  days:Day[] = [];
 
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
   date = new Date();
   daysInCal:string[] = [];
+  days:Day[] = [];
 
   setup(){
-
     let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
     let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
-
-    let firstDayOfYear = new Date(this.date.getFullYear(), 0, 1);
 
     let dateString = firstDayOfMonth.toLocaleDateString('pl-pl', {
       weekday: 'long',
@@ -45,26 +40,76 @@ export class MonthComponent implements OnInit {
     console.log("dateString: " + dateString);
     console.log("Paddington: " + paddington);
 
-    for(let i = 1; i<=daysInMonth; i++){
+    for(let i = 0; i<daysInMonth; i++){
       this.daysInCal.push(i.toString());
-      //this.days[i].day = i;
+      this.days[i] = new Day("");
+      this.days[i].day = (i+1).toString(); // +1 bo dni nie zaczynaja sie od '0'
     }
+
     if(paddington > 0){
       for (let j = 1; j<=paddington; j++){
         this.daysInCal.unshift("");
+        this.days.unshift( new Day("") );
       }
+    }
+
+    for(let k = 0; k < this.days.length; k++){
+      if ( k % 7 === 5 ) this.days[k].isSaturday = true;
+      if ( k % 7 === 6 ) this.days[k].isSunday = true;
+      this.days[k].day === "" ? this.days[k].isDay = false : this.days[k].isDay = true;
     }
   }
 
-  isWeekend(){
-    if(this.monthToDisplay === 0){
-      console.log("nowy rok");
+  isWeekend(day:Day){
+    if( day.isSaturday || day.isSunday ){
       return true;
     }
     return false;
   }
 
-  isHoliday(){
+  isHoliday(day:Day){
+    if( day.isHoliday ){
+      return true;
+    }
+    return false;
+  }
+
+  holidayAssign(){
+    if(this.monthToDisplay === 0){  // styczen
+      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );  // nowy rok
+      this.days.find( e => e.day==="6" ? e.isHoliday = true : e.isHoliday = false );  // 'szesciu' kroli
+    }
+    else if(this.monthToDisplay === 1){ // luty
+    }
+    else if(this.monthToDisplay === 2){ // marzec
+    }
+    else if(this.monthToDisplay === 3){ // kwiecien
+    }
+    else if(this.monthToDisplay === 4){ // maj
+      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );  // sw pracy
+      this.days.find( e => e.day==="3" ? e.isHoliday = true : e.isHoliday = false );  // konstytuszyn
+    }
+    else if(this.monthToDisplay === 5){ // czerwiec
+    }
+    else if(this.monthToDisplay === 6){ // lipiec
+    }
+    else if(this.monthToDisplay === 7){ // sierpien
+      this.days.find( e => e.day==="15" ? e.isHoliday = true : e.isHoliday = false );  // wniebowziecie
+    }
+    else if(this.monthToDisplay === 8){ // wrzesien
+    }
+    else if(this.monthToDisplay === 9){ // pazdziernik
+    }
+    else if(this.monthToDisplay === 10){ // listopad
+      this.days.find( e => e.day==="1" ? e.isHoliday = true : e.isHoliday = false );    // wszystkich swintych
+      this.days.find( e => e.day==="11" ? e.isHoliday = true : e.isHoliday = false );   // niepodleglosc
+    }
+    else if(this.monthToDisplay === 11){ // grudzien
+      this.days.find( e => e.day==="24" ? e.isHoliday = true : e.isHoliday = false );  // wigilia
+      this.days.find( e => e.day==="25" ? e.isHoliday = true : e.isHoliday = false );  // 1 day
+      this.days.find( e => e.day==="26" ? e.isHoliday = true : e.isHoliday = false );  // 2 day
+    }
+
 
   }
 

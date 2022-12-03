@@ -4,9 +4,9 @@
         <div class="day-caption" *ngFor="let temp of this.dniTygodniaCaptions">
             {{temp}}
         </div>
-        <div class="day" *ngFor="let i of this.daysInCal">
-            <div [ngClass]="isWeekend() ? 'weekend' : '' ">
-                {{i}}
+        <div class="day" *ngFor="let d of this.days">
+            <div [ngClass]="isWeekend(d) ? 'weekend' : '' || isHoliday(d) ? 'holiday' : '' " >
+                {{d.day}}
             </div>
         </div>
     </div>
