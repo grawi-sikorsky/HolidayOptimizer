@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Day } from './day';
 
 @Component({
   selector: 'app-month',
@@ -16,6 +17,8 @@ export class MonthComponent implements OnInit {
     this.setup();
     this.isWeekend();
   }
+
+  days:Day[] = [];
 
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
@@ -44,6 +47,7 @@ export class MonthComponent implements OnInit {
 
     for(let i = 1; i<=daysInMonth; i++){
       this.daysInCal.push(i.toString());
+      //this.days[i].day = i;
     }
     if(paddington > 0){
       for (let j = 1; j<=paddington; j++){
