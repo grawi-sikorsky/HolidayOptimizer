@@ -84,6 +84,7 @@ export class MonthComponent implements OnInit {
     else if(this.monthToDisplay === 2){ // marzec
     }
     else if(this.monthToDisplay === 3){ // kwiecien
+
     }
     else if(this.monthToDisplay === 4){ // maj
       this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // sw pracy
@@ -112,6 +113,10 @@ export class MonthComponent implements OnInit {
 
     console.log(this.days);
 
+  }
+
+  findWielkanoc(){
+    
   }
 
 }
