@@ -13,15 +13,16 @@
     font-weight: 300;
     border-radius: 5px;
 
-    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition:cubic-bezier(0.075, 0.82, 0.165, 1);
     transition-duration: 0.5s;
 }
 
 .day:hover {
     background-color: rgb(156, 202, 252);
+    font-weight: 600;
     cursor: pointer;
     transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-    transition-duration: 0.5s;
+    transition-duration: 0.3s;
 }
 
 .day-caption {
