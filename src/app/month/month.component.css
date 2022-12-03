@@ -47,3 +47,12 @@
     border-style: solid;
     border-radius: 5px;
 }
+
+.weekend{
+    color: crimson;
+}
+.holiday{
+    font-size: 14px;
+    font-weight: 600;
+    color: crimson;
+}
