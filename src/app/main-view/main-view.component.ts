@@ -15,79 +15,49 @@ export class MainViewComponent implements OnInit{
 
   ngOnInit() {
     this.fillCalendar();
-    console.log("ROK JEST: " + this.pickedYear);
-    console.log("Wielkanoc: " + this.findRuchomeSwieta());
-    console.log("Wielkanoc: " + this.findRuchomeSwieta());
+    console.log("Wielkanoc[mainview]: " + this.findRuchomeSwieta());
+  }
+  ngOnChanges() {
+    console.log("ng on changes main view");
+    this.fillCalendar();
   }
 
   months:number[] = new Array(12);
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
-  dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   year:Year = new Year();
   daysInYear:number = 0;
-  calendarDays:Day[] = [];
   date = new Date();
-  pickedYear:number = this.date.getUTCFullYear();
   daySelected : number = 0;
 
-
   fillCalendar(){
-    this.year.firstDayOfYear = new Date(this.date.getFullYear(), 0, 1 );
-    let firstDayOfYear = new Date(this.date.getFullYear(), 0, 1 );
-    console.log("Firsrt day of year: " + firstDayOfYear);
-    console.log("Firsrt day of year2: " + this.year.firstDayOfYear);
+    this.daysInYear = 0;
+    this.year.months.splice(0);
+    this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
+    console.log("Firsrt day of year: " + this.year.firstDayOfYear);
 
-    for(let i=0; i<this.months.length; i++){
-      this.year.months.push( new Month( (i+1).toString() ) );
-      let temp = new Date(this.date.getFullYear(), i, 0).getDate();
-      this.daysInYear += temp;
+    for(let i=0; i<this.months.length; i++){  // dla kazdego miesiaca
+      this.year.months.push( new Month( (i+1).toString() ) ); // dodaj nowy miesiac
+      let daysInMonth = new Date(this.year.year, i+1, 0).getDate();  // sprawdz ilosc dni danego miesiaca
+      for(let j = 0; j<daysInMonth; j++){     // dodaj kazdy dzien dla danego miesiaca
+        this.year.months[i].days.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
+      }
+      this.daysInYear += new Date(this.year.year, i, 0).getDate();
     }
     console.log("Days in year: " + this.daysInYear);
-    console.log("DATA YEAR: " + this.year);
-    // let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
-    // let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
-
-    let dateString = firstDayOfYear.toLocaleDateString('pl-pl', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    });
-
-    let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
-    console.log("Year Paddington: " + paddington);
-
-    for(let i = 0; i<this.months.length; i++){
-      let daysInMonth = new Date(this.date.getFullYear(), i+1, 0).getDate();
-      for(let j = 0; j<daysInMonth; j++){
-        this.calendarDays.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
-      }
-    }
-    console.log(this.calendarDays);
-
-    // if(paddington > 0){
-    //   for (let j = 1; j<=paddington; j++){
-    //     this.days.unshift( new Day("") );
-    //   }
-    // }
-
-    // for(let k = 0; k < this.days.length; k++){
-    //   if ( k % 7 === 5 ) this.days[k].isSaturday = true;
-    //   if ( k % 7 === 6 ) this.days[k].isSunday = true;
-    //   this.days[k].day === "" ? this.days[k].isDay = false : this.days[k].isDay = true;
-    // }
+    console.log("DATA YEAR: ");
+    console.log( this.year );
   }
 
   findRuchomeSwieta(){
-    this.findWielkanoc();
+    return this.findWielkanoc();
   }
   findWielkanoc(){
     let a, b, c, d, e, f, g, h, i, k, l, m, p;
-     
+  
     // algorytm Meeusa/Jonesa/Butchera
-    a = this.pickedYear % 19;
-    b = Math.floor (this.pickedYear / 100);
-    c = this.pickedYear % 100;
+    a = this.year.year % 19;
+    b = Math.floor (this.year.year / 100);
+    c = this.year.year % 100;
     d = Math.floor (b / 4);
     e = b % 4;
     f = Math.floor  ((b + 8) / 25);
@@ -106,27 +76,52 @@ export class MainViewComponent implements OnInit{
     if(day < 10) day = 0 + day;
     if(month < 10) month = 0 + month;
     
-    let wielkanoc = day + "." + month + "." + this.pickedYear;
+    let wielkanoc = day + "." + month + "." + this.year.year;
 
-    // if( this.monthToDisplay === month-1 )
-    // {
-    //   this.days.find( e => { if( e.day === day.toString() ) e.isHoliday = true } );           // Wielkanoc
-    //   this.days.find( e => { if( e.day === (day+1).toString() ) e.isHoliday = true } );       // Poniedzialek Wielkanocny = wielkanoc + 1 // nie zadziala jesli wielkanoc = marzec, poniedzialek = kwiecien
-    //   this.days.find( e => { if( e.day === (day+49).toString() ) e.isHoliday = true } );      // Poniedzialek Wielkanocny = wielkanoc + 49
-    // }
+    this.year.months[month-1].days[day-1].isHoliday = true; // wielkanoc
 
-    // pozostale swieta ruchome odnosza sie do wielkanocy, dlatego warto policzyc je w tym samym miejscu:
-    // zielone swiatki
+    // PONIEDZIALEK WIELKANOCNY
+    if( this.year.months[month-1].days.length === day ){
+      this.year.months[month].days[0].isHoliday = true;   // poniedzielnik wielkanocny (wielkanoc +1) w kolejnym msc
+    } else {
+      this.year.months[month-1].days[day].isHoliday = true;   // poniedzielnik wielkanocny (wielkanoc +1) 
+    }
 
-    // boze cielsko
+    // ZIELONE SWIATKI (+49 dni od wielkanocy)
+    let daysLeft = 60;
+    let monthShift = -1;
+    let mshift = day;
+
+    while(daysLeft > 1){
+
+      if(this.year.months[month+monthShift].days.length <= mshift){
+        mshift = 0;
+        monthShift++;
+      }
+
+      if(daysLeft === 12){ // po drodze wbijamy zielone swiatki (+49)
+        this.year.months[month+monthShift].days[mshift].isHoliday = true;
+      }
+
+      daysLeft--;
+      mshift++;
+    }
+    // na koncu bozie cialo (+60)
+    this.year.months[month+monthShift].days[mshift].isHoliday = true;
 
     return wielkanoc;
   }
-  findZieloneSwiatki(){
 
+
+  prevYear(){
+    let temp = this.year.year-1;
+    this.year.year = temp;
+    this.ngOnChanges();
   }
-  findBozeCielsko(){
-
+  nextYear(){
+    let temp = this.year.year+1;
+    this.year.year = temp;
+    this.ngOnChanges();
   }
   
 } 
