@@ -11,7 +11,6 @@ import { Year } from '../models/year';
 
 export class MainViewComponent implements OnInit{
   
-  
   constructor() { }
 
   ngOnInit() {
@@ -44,7 +43,6 @@ export class MainViewComponent implements OnInit{
       this.daysInYear += temp;
     }
     console.log("Days in year: " + this.daysInYear);
-
     console.log("DATA YEAR: " + this.year);
     // let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
     // let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
