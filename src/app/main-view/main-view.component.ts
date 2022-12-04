@@ -15,7 +15,6 @@ export class MainViewComponent implements OnInit{
 
   ngOnInit() {
     this.fillCalendar();
-    console.log("Wielkanoc[mainview]: " + this.findRuchomeSwieta());
   }
   ngOnChanges() {
     console.log("ng on changes main view");
@@ -33,7 +32,7 @@ export class MainViewComponent implements OnInit{
     this.daysInYear = 0;
     this.year.months.splice(0);
     this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
-    console.log("Firsrt day of year: " + this.year.firstDayOfYear);
+    console.log("First day of year: " + this.year.firstDayOfYear);
 
     for(let i=0; i<this.months.length; i++){  // dla kazdego miesiaca
       this.year.months.push( new Month( (i+1).toString() ) ); // dodaj nowy miesiac
@@ -46,6 +45,8 @@ export class MainViewComponent implements OnInit{
     console.log("Days in year: " + this.daysInYear);
     console.log("DATA YEAR: ");
     console.log( this.year );
+
+    this.findRuchomeSwieta();
   }
 
   findRuchomeSwieta(){
@@ -115,11 +116,13 @@ export class MainViewComponent implements OnInit{
 
   prevYear(){
     let temp = this.year.year-1;
+    this.year = new Year();
     this.year.year = temp;
     this.ngOnChanges();
   }
   nextYear(){
     let temp = this.year.year+1;
+    this.year = new Year();
     this.year.year = temp;
     this.ngOnChanges();
   }
