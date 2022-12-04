@@ -1,7 +1,7 @@
 .content {
-    display: flex;
-    margin: 82px auto 32px;
-    padding: 0 16px;
+    /* display: flex; */
+    margin: 62px auto 30px;
+    padding: 0 10px;
     max-width: 960px;
     flex-direction: column;
     align-items: center;
@@ -9,10 +9,10 @@
 
 .month {
     display: grid;
-    margin: 8px;
+    /* margin: 5px; */
     margin-bottom: 15px;
-    min-width: 250px;
-    max-width: 350px;
+    min-width: 220px;
+    max-width: 250px;
 }
 
 .day {
