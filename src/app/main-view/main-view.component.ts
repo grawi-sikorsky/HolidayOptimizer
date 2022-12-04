@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Day } from '../models/day';
+import { Month } from '../models/month';
+import { Year } from '../models/year';
 
 @Component({
   selector: 'app-main-view',
@@ -12,6 +15,7 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
+    this.fillCalendar();
     console.log("ROK JEST: " + this.pickedYear);
     console.log("Wielkanoc: " + this.findRuchomeSwieta());
     console.log("Wielkanoc: " + this.findRuchomeSwieta());
@@ -19,9 +23,62 @@ export class MainViewComponent implements OnInit{
 
   months:number[] = new Array(12);
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
+  dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
+  year:Year = new Year();
+  daysInYear:number = 0;
+  calendarDays:Day[] = [];
   date = new Date();
-  daySelected : number = 0;
   pickedYear:number = this.date.getUTCFullYear();
+  daySelected : number = 0;
+
+
+  fillCalendar(){
+    this.year.firstDayOfYear = new Date(this.date.getFullYear(), 0, 1 );
+    let firstDayOfYear = new Date(this.date.getFullYear(), 0, 1 );
+    console.log("Firsrt day of year: " + firstDayOfYear);
+    console.log("Firsrt day of year2: " + this.year.firstDayOfYear);
+
+    for(let i=0; i<this.months.length; i++){
+      this.year.months.push( new Month( (i+1).toString() ) );
+      let temp = new Date(this.date.getFullYear(), i, 0).getDate();
+      this.daysInYear += temp;
+    }
+    console.log("Days in year: " + this.daysInYear);
+
+    console.log("DATA YEAR: " + this.year);
+    // let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
+    // let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
+
+    let dateString = firstDayOfYear.toLocaleDateString('pl-pl', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+
+    let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
+    console.log("Year Paddington: " + paddington);
+
+    for(let i = 0; i<this.months.length; i++){
+      let daysInMonth = new Date(this.date.getFullYear(), i+1, 0).getDate();
+      for(let j = 0; j<daysInMonth; j++){
+        this.calendarDays.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
+      }
+    }
+    console.log(this.calendarDays);
+
+    // if(paddington > 0){
+    //   for (let j = 1; j<=paddington; j++){
+    //     this.days.unshift( new Day("") );
+    //   }
+    // }
+
+    // for(let k = 0; k < this.days.length; k++){
+    //   if ( k % 7 === 5 ) this.days[k].isSaturday = true;
+    //   if ( k % 7 === 6 ) this.days[k].isSunday = true;
+    //   this.days[k].day === "" ? this.days[k].isDay = false : this.days[k].isDay = true;
+    // }
+  }
 
   findRuchomeSwieta(){
     this.findWielkanoc();

@@ -1,6 +1,6 @@
 import { outputAst } from '@angular/compiler';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Day } from './day';
+import { Day } from '../models/day';
 
 @Component({
   selector: 'app-month',
@@ -24,7 +24,6 @@ export class MonthComponent implements OnInit {
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
   date = new Date();
-  daysInCal:string[] = [];
   days:Day[] = [];
 
   setup(){
@@ -44,14 +43,12 @@ export class MonthComponent implements OnInit {
     console.log("Paddington: " + paddington);
 
     for(let i = 0; i<daysInMonth; i++){
-      this.daysInCal.push(i.toString());
       this.days[i] = new Day("");
       this.days[i].day = (i+1).toString(); // +1 bo dni nie zaczynaja sie od '0'
     }
 
     if(paddington > 0){
       for (let j = 1; j<=paddington; j++){
-        this.daysInCal.unshift("");
         this.days.unshift( new Day("") );
       }
     }
