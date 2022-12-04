@@ -301,8 +301,12 @@
 
         <div class="month" *ngFor="let month of this.months; let i=index">
             {{miesiaceCaptions[i]}}
-            <app-month [monthToDisplay]="i"></app-month>
+            <app-month [monthToDisplay]="i" [yearSelected]="this.pickedYear" (selectedDay)="daySelected = $event"></app-month>
         </div>
-
+    
+    </div>
+    <div>
+        
+        Day selected: {{daySelected}}
     </div>
 </div>
