@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Day } from './day';
+import { outputAst } from '@angular/compiler';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Day } from '../models/day';
+import { Year } from '../models/year';
 
 @Component({
   selector: 'app-month',
@@ -9,10 +11,16 @@ import { Day } from './day';
 export class MonthComponent implements OnInit {
 
   @Input() monthToDisplay = 0;
-  
+  @Input() yearSelected:Year = new Year();
+  @Output() selectedDay = new EventEmitter();
+
   constructor(){  }
 
   ngOnInit() {
+    // this.setup();
+    // this.holidayAssign();
+  }
+  ngOnChanges(){
     this.setup();
     this.holidayAssign();
   }
@@ -20,13 +28,13 @@ export class MonthComponent implements OnInit {
   dniTygodnia = ["poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota", "niedziela"];
   dniTygodniaCaptions = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
-  date = new Date();
-  daysInCal:string[] = [];
   days:Day[] = [];
 
   setup(){
-    let firstDayOfMonth = new Date(this.date.getFullYear(), this.monthToDisplay, 1);
-    let daysInMonth = new Date(this.date.getFullYear(), this.monthToDisplay+1, 0).getDate();
+    this.days.splice(0);
+    this.days = this.yearSelected.months[this.monthToDisplay].days;
+    let firstDayOfMonth = new Date(this.yearSelected.year, this.monthToDisplay, 1);
+    let daysInMonth = new Date(this.yearSelected.year, this.monthToDisplay+1, 0).getDate();
 
     let dateString = firstDayOfMonth.toLocaleDateString('pl-pl', {
       weekday: 'long',
@@ -36,19 +44,10 @@ export class MonthComponent implements OnInit {
     });
 
     let paddington = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
-
-    console.log("dateString: " + dateString);
-    console.log("Paddington: " + paddington);
-
-    for(let i = 0; i<daysInMonth; i++){
-      this.daysInCal.push(i.toString());
-      this.days[i] = new Day("");
-      this.days[i].day = (i+1).toString(); // +1 bo dni nie zaczynaja sie od '0'
-    }
+    this.yearSelected.months[this.monthToDisplay].paddingDays = this.dniTygodnia.indexOf(dateString.split(', ')[0]);
 
     if(paddington > 0){
       for (let j = 1; j<=paddington; j++){
-        this.daysInCal.unshift("");
         this.days.unshift( new Day("") );
       }
     }
@@ -82,9 +81,10 @@ export class MonthComponent implements OnInit {
     else if(this.monthToDisplay === 1){ // luty
     }
     else if(this.monthToDisplay === 2){ // marzec
+      //this.findWielkanoc()
     }
     else if(this.monthToDisplay === 3){ // kwiecien
-
+      //this.findWielkanoc()
     }
     else if(this.monthToDisplay === 4){ // maj
       this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // sw pracy
@@ -110,13 +110,6 @@ export class MonthComponent implements OnInit {
       this.days.find( e => { if(e.day==="25") e.isHoliday = true } );     // 1 day
       this.days.find( e => { if(e.day==="26") e.isHoliday = true } );     // 2 day
     }
-
-    console.log(this.days);
-
-  }
-
-  findWielkanoc(){
-    
   }
 
 }

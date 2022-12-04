@@ -294,15 +294,27 @@
     }
 </style>
 
-<button mat-raised-button color="warn"> asdf </button>
+<button mat-raised-button color="warn" (click)="prevYear()"> < wstecz </button>
+<button mat-raised-button color="warn" (click)="nextYear()"> daley > </button>
 
 <div class="container">
     <div class="row row-cols-1 row-cols-md-auto text-center justify-content-between justify-content-md-evenly">
+            <div class="row row-cols-1 row-cols-md-auto text-center justify-content-between justify-content-md-evenly" [(ngModel)]="this.year">
+                costam {{this.year.year}}
+                <div class="month" *ngFor="let month of this.months; let i=index">
+                    {{ miesiaceCaptions[i] }}
+                    <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="daySelected = $event"></app-month>
+                </div>
+            </div>
+<!-- 
+            <div class="month" *ngFor="let month of this.months; let i=index">
+                {{ miesiaceCaptions[i] }}
+                <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="daySelected = $event"></app-month>
+            </div> -->
 
-        <div class="month" *ngFor="let month of this.months; let i=index">
-            {{miesiaceCaptions[i]}}
-            <app-month [monthToDisplay]="i"></app-month>
-        </div>
-
+    </div>
+    <div>
+        
+        Day selected: {{daySelected}}
     </div>
 </div>
