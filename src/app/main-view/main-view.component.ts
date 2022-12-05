@@ -139,7 +139,12 @@ export class MainViewComponent implements OnInit{
 
     //this.year.months[Number(selected.month)-1].days[Number(selected.day)-padding].isSelected = true;
 
-    this.year.months[selectedMonth].days.find( e => { if(e.fullDate===selected.fullDate) e.isSelected = true } );      // nowy rok
+    this.year.months[selectedMonth].days.find( e => { 
+      if( e.fullDate===selected.fullDate ){
+        if( e.isSelected === false ) e.isSelected = true
+        else e.isSelected = false;
+      }
+    } );
     this.ngOnChanges();
   }
   
