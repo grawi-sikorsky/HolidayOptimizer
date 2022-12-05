@@ -18,7 +18,7 @@ export class MainViewComponent implements OnInit{
   }
   ngOnChanges() {
     console.log("ng on changes main view");
-    this.fillCalendar();
+    this.updateCallendar();
   }
 
   months:number[] = new Array(12);
@@ -38,6 +38,9 @@ export class MainViewComponent implements OnInit{
       let daysInMonth = new Date(this.year.year, i+1, 0).getDate();  // sprawdz ilosc dni danego miesiaca
       for(let j = 0; j<daysInMonth; j++){     // dodaj kazdy dzien dla danego miesiaca
         this.year.months[i].days.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
+        this.year.months[i].days[j].month = (i+1).toString();
+        this.year.months[i].days[j].year = this.year.year.toString();
+        this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
       this.daysInYear += new Date(this.year.year, i, 0).getDate();
     }
@@ -46,6 +49,9 @@ export class MainViewComponent implements OnInit{
     console.log( this.year );
 
     this.findRuchomeSwieta();
+  }
+  updateCallendar(){
+    console.log(this.year);
   }
 
   findRuchomeSwieta(){
@@ -126,9 +132,10 @@ export class MainViewComponent implements OnInit{
     this.ngOnChanges();
   }
   isDaySelected(selected:Day){
+    //debugger;
     console.log(selected);
-    this.year.months[Number(selected.month)].days[Number(selected.day)].isSelected = true;
-    //this.ngOnChanges();
+    this.year.months[Number(selected.month)-1].days[Number(selected.day)].isSelected = true;
+    this.ngOnChanges();
   }
   
 } 
