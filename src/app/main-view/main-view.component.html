@@ -21,15 +21,6 @@
         margin: 0;
     }
 
-    .content {
-        display: flex;
-        margin: 82px auto 32px;
-        padding: 0 16px;
-        max-width: 960px;
-        flex-direction: column;
-        align-items: center;
-    }
-
     a,
     a:visited,
     a:hover {
@@ -42,54 +33,27 @@
     }
 
 
-    /* Responsive Styles */
-    @media screen and (max-width: 767px) {
 
-        .card-container>*:not(.circle-link),
-        .terminal {
-            width: 100%;
-        }
-
-        .card:not(.highlight-card) {
-            height: 16px;
-            margin: 8px 0;
-        }
-
-        .card.highlight-card span {
-            margin-left: 72px;
-        }
-
-        svg#rocket-smoke {
-            right: 120px;
-            transform: rotate(-5deg);
-        }
-    }
-
-    @media screen and (max-width: 575px) {
-        svg#rocket-smoke {
-            display: none;
-            visibility: hidden;
-        }
-    }
 </style>
 
-<button mat-raised-button color="warn" (click)="prevYear()"> < wstecz </button>
-<button mat-raised-button color="warn" (click)="nextYear()"> dalej > </button>
-
-<div class="col">Rok {{this.year.year}}</div>
-
-<div class="container">
-    <div class="row row-cols-1 row-cols-md-auto text-center justify-content-between justify-content-md-evenly">
+<div class="year-switcher"> 
+    <h2>Rok {{this.year.year}} </h2>
+    <button mat-stroked-button color="primary" (click)="prevYear()"><</button>
+    <button mat-stroked-button color="primary" (click)="nextYear()">></button>
+</div>
+<div class="year text-center">
 
         <div class="month" *ngFor="let month of this.months; let i=index">
             {{ miesiaceCaptions[i] }}
-            <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="daySelected = $event">
+            
+            <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="isDaySelected($event)">
             </app-month>
         </div>
 
-    </div>
-    <div>
 
-        Day selected: {{daySelected}}
-    </div>
+
+</div>   
+<div>
+
+    <!-- Day selected: {{daySelected}} -->
 </div>
