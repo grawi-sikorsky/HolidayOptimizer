@@ -78,7 +78,7 @@ export class MonthComponent implements OnInit {
   }
 
   holidayAssign(){
-    this.days.find( e => { if(e.isSelected) e.isHoliday = true } );
+    //this.days.find( e => { if(e.isSelected) e.isHoliday = true } );
     
     if(this.monthToDisplay === 0){  // styczen
       this.days.find( e => { if(e.day==="1") e.isHoliday = true } );      // nowy rok
