@@ -145,7 +145,7 @@ export class MainViewComponent implements OnInit{
         else e.isSelected = false;
       }
     } );
-    this.ngOnChanges();
+    //this.ngOnChanges();
   }
   
 } 
