@@ -60,3 +60,9 @@
     color: crimson;
     background-color: #ffe9e9;
 }
+.selectedDay{
+    font-size: 15px;
+    font-weight: 600;
+    color: chartreuse;
+    background-color: rgb(238, 255, 220);
+}
