@@ -123,18 +123,23 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
-    this.ngOnChanges();
+    this.ngOnInit();
   }
   nextYear(){
     let temp = this.year.year+1;
     this.year = new Year();
     this.year.year = temp;
-    this.ngOnChanges();
+    this.ngOnInit();
   }
   isDaySelected(selected:Day){
     //debugger;
     console.log(selected);
-    this.year.months[Number(selected.month)-1].days[Number(selected.day)].isSelected = true;
+    let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
+    let padding = this.year.months[Number(selected.month)-1].paddingDays;
+
+    //this.year.months[Number(selected.month)-1].days[Number(selected.day)-padding].isSelected = true;
+
+    this.year.months[selectedMonth].days.find( e => { if(e.fullDate===selected.fullDate) e.isSelected = true } );      // nowy rok
     this.ngOnChanges();
   }
   
