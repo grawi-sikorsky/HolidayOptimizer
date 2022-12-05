@@ -144,7 +144,7 @@ export class MainViewComponent implements OnInit{
         if( e.isSelected === false ) e.isSelected = true
         else e.isSelected = false;
       }
-    } );      // nowy rok
+    } );
     this.ngOnChanges();
   }
 } 
