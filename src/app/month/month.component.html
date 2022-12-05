@@ -4,7 +4,7 @@
         <div class="day-caption" *ngFor="let temp of this.dniTygodniaCaptions">
             {{temp}}
         </div>
-        <div class="day" *ngFor="let d of this.days" [ngClass]="isHoliday(d) ? 'holiday' : isWeekend(d) ? 'weekend' : '' " (click)="selectedDay.emit(d.day)">
+        <div class="day" *ngFor="let d of this.days" [ngClass]="isHoliday(d) ? 'holiday' : isWeekend(d) ? 'weekend' : isSelected(d) ? 'selectedDay' : '' " (click)="selectedDay.emit(d)">
             <div>
                 {{d.day}}
             </div>

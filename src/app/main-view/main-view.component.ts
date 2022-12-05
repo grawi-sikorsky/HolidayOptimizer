@@ -26,7 +26,6 @@ export class MainViewComponent implements OnInit{
   year:Year = new Year();
   daysInYear:number = 0;
   date = new Date();
-  daySelected : number = 0;
 
   fillCalendar(){
     this.daysInYear = 0;
@@ -125,6 +124,11 @@ export class MainViewComponent implements OnInit{
     this.year = new Year();
     this.year.year = temp;
     this.ngOnChanges();
+  }
+  isDaySelected(selected:Day){
+    console.log(selected);
+    this.year.months[Number(selected.month)].days[Number(selected.day)].isSelected = true;
+    //this.ngOnChanges();
   }
   
 } 

@@ -5,7 +5,8 @@ export class Day {
     isSaturday:boolean = false;
     isSunday:boolean = false;
     isHoliday:boolean = false;
-
+    isSelected:boolean = false;
+    
     month:string="";
     year:string="";
     fullDate:string="";
