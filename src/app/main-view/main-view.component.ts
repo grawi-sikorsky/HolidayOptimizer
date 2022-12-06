@@ -142,6 +142,8 @@ export class MainViewComponent implements OnInit{
         else e.isSelected = false;
       }
     });
+    console.log("days before: ");
+    console.log(this.persistentData.daysSelected);
 
     let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
 
@@ -149,9 +151,12 @@ export class MainViewComponent implements OnInit{
       this.persistentData.daysSelected.push(selected);
     } else {
       console.log(selected.fullDate + " element exists. Deleting...");
-      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(selected),1);
+      console.log(this.persistentData.daysSelected.indexOf(find));
+      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
     }
     this.saveLocal(this.persistentData);
+    console.log("days end: ");
+    console.log(this.persistentData.daysSelected);
   }
 
   // trzeba to obserwowac..
