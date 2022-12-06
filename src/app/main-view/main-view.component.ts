@@ -123,6 +123,7 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
+
     this.ngOnInit();
   }
   nextYear(){
@@ -178,7 +179,7 @@ export class MainViewComponent implements OnInit{
 
   }
 
-  saveLocal(data:LocalData){
+  saveLocal(data:LocalData){ //todo: savelocal bez parametru, wewnatrz poprzepisuje wszystko z klasy Year do persistenstorage.
     localStorage.setItem("localData", JSON.stringify(data));
   }
 
