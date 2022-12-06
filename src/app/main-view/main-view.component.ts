@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Day } from '../models/day';
 import { Month } from '../models/month';
 import { Year } from '../models/year';
+import { LocalData } from '../local-data';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-main-view',
@@ -14,7 +16,9 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
+    this.loadLocal();
     this.fillCalendar();
+    this.loadSelectedFromLocalData();
   }
   ngOnChanges() {
     console.log("ng on changes main view");
@@ -24,12 +28,12 @@ export class MainViewComponent implements OnInit{
   months:number[] = new Array(12);
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
   year:Year = new Year();
-  daysInYear:number = 0;
   date = new Date();
+  persistentData:LocalData = new LocalData();
 
   fillCalendar(){
-    this.daysInYear = 0;
     this.year.months.splice(0);
+    this.year.year = this.persistentData.lastYear;
     this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
     console.log("First day of year: " + this.year.firstDayOfYear);
 
@@ -42,9 +46,7 @@ export class MainViewComponent implements OnInit{
         this.year.months[i].days[j].year = this.year.year.toString();
         this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
-      this.daysInYear += new Date(this.year.year, i, 0).getDate();
     }
-    console.log("Days in year: " + this.daysInYear);
     console.log("DATA YEAR: ");
     console.log( this.year );
 
@@ -123,29 +125,72 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
+    this.persistentData.lastYear = temp;
+    this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
   nextYear(){
     let temp = this.year.year+1;
     this.year = new Year();
     this.year.year = temp;
+    this.persistentData.lastYear = temp;
+    this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
-  isDaySelected(selected:Day){
-    //debugger;
-    console.log(selected);
-    let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
-    let padding = this.year.months[Number(selected.month)-1].paddingDays;
 
-    //this.year.months[Number(selected.month)-1].days[Number(selected.day)-padding].isSelected = true;
+  isDaySelected(selected:Day){
+
+    let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
 
     this.year.months[selectedMonth].days.find( e => { 
       if( e.fullDate===selected.fullDate ){
         if( e.isSelected === false ) e.isSelected = true
         else e.isSelected = false;
       }
-    } );
-    //this.ngOnChanges();
+    });
+    console.log("days before: ");
+    console.log(this.persistentData.daysSelected);
+
+    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
+
+    if( find === undefined ){
+      this.persistentData.daysSelected.push(selected);
+    } else {
+      console.log(selected.fullDate + " element exists. Deleting...");
+      console.log(this.persistentData.daysSelected.indexOf(find));
+      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
+    }
+    this.saveLocal(this.persistentData);
+    console.log("days end: ");
+    console.log(this.persistentData.daysSelected);
+  }
+
+  // trzeba to obserwowac..
+  loadSelectedFromLocalData(){
+    this.loadLocal();
+    this.persistentData.daysSelected.forEach( loadedDay => {
+
+      let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
+
+      this.year.months[selectedMonth].days.find( existingDay => { 
+        if( existingDay.fullDate===loadedDay.fullDate ){
+          existingDay.isSelected = true
+        }
+      });
+    });
   }
   
+  deselectAll(){
+
+  }
+
+  saveLocal(data:LocalData){ //todo: savelocal bez parametru, wewnatrz poprzepisuje wszystko z klasy Year do persistenstorage.
+    localStorage.setItem("localData", JSON.stringify(data));
+  }
+
+  loadLocal(){
+    if(localStorage.getItem("localData") !== null){
+      this.persistentData = JSON.parse(localStorage.getItem("localData")!);
+    }
+  }
 } 
