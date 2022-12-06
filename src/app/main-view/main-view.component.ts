@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Day } from '../models/day';
 import { Month } from '../models/month';
 import { Year } from '../models/year';
+import { LocalData } from '../local-data';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-main-view',
@@ -15,6 +17,7 @@ export class MainViewComponent implements OnInit{
 
   ngOnInit() {
     this.fillCalendar();
+    this.loadSelectedFromLocalData();
   }
   ngOnChanges() {
     console.log("ng on changes main view");
@@ -24,11 +27,10 @@ export class MainViewComponent implements OnInit{
   months:number[] = new Array(12);
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
   year:Year = new Year();
-  daysInYear:number = 0;
   date = new Date();
+  persistentData:LocalData = new LocalData();
 
   fillCalendar(){
-    this.daysInYear = 0;
     this.year.months.splice(0);
     this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
     console.log("First day of year: " + this.year.firstDayOfYear);
@@ -42,9 +44,7 @@ export class MainViewComponent implements OnInit{
         this.year.months[i].days[j].year = this.year.year.toString();
         this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
-      this.daysInYear += new Date(this.year.year, i, 0).getDate();
     }
-    console.log("Days in year: " + this.daysInYear);
     console.log("DATA YEAR: ");
     console.log( this.year );
 
@@ -131,21 +131,55 @@ export class MainViewComponent implements OnInit{
     this.year.year = temp;
     this.ngOnInit();
   }
-  isDaySelected(selected:Day){
-    //debugger;
-    console.log(selected);
-    let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
-    let padding = this.year.months[Number(selected.month)-1].paddingDays;
 
-    //this.year.months[Number(selected.month)-1].days[Number(selected.day)-padding].isSelected = true;
+  isDaySelected(selected:Day){
+
+    let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
 
     this.year.months[selectedMonth].days.find( e => { 
       if( e.fullDate===selected.fullDate ){
         if( e.isSelected === false ) e.isSelected = true
         else e.isSelected = false;
       }
-    } );
-    //this.ngOnChanges();
+    });
+
+    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
+
+    if( find === undefined ){
+      this.persistentData.daysSelected.push(selected);
+    } else {
+      console.log(selected.fullDate + " element exists. Deleting...");
+      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(selected),1);
+    }
+    this.saveLocal(this.persistentData);
+  }
+
+  // trzeba to obserwowac..
+  loadSelectedFromLocalData(){
+    this.loadLocal();
+    this.persistentData.daysSelected.forEach( loadedDay => {
+
+      let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
+
+      this.year.months[selectedMonth].days.find( existingDay => { 
+        if( existingDay.fullDate===loadedDay.fullDate ){
+          existingDay.isSelected = true
+        }
+      });
+    });
   }
   
+  deselectAll(){
+
+  }
+
+  saveLocal(data:LocalData){
+    localStorage.setItem("localData", JSON.stringify(data));
+  }
+
+  loadLocal(){
+    if(localStorage.getItem("localData") !== null){
+      this.persistentData = JSON.parse(localStorage.getItem("localData")!);
+    }
+  }
 } 
