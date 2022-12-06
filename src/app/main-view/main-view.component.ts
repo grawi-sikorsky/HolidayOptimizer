@@ -16,6 +16,7 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
+    this.loadLocal();
     this.fillCalendar();
     this.loadSelectedFromLocalData();
   }
@@ -32,6 +33,7 @@ export class MainViewComponent implements OnInit{
 
   fillCalendar(){
     this.year.months.splice(0);
+    this.year.year = this.persistentData.lastYear;
     this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
     console.log("First day of year: " + this.year.firstDayOfYear);
 
@@ -123,13 +125,16 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
-
+    this.persistentData.lastYear = temp;
+    this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
   nextYear(){
     let temp = this.year.year+1;
     this.year = new Year();
     this.year.year = temp;
+    this.persistentData.lastYear = temp;
+    this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
 
