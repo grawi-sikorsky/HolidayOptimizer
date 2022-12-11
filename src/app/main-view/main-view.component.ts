@@ -130,18 +130,23 @@ export class MainViewComponent implements OnInit{
     this.ngOnInit();
   }
 
-  isDaySelected(selected:Day){
+  selectDay(selected:Day){
     // 1. get month of selected day
     let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
 
-    this.year.months[selectedMonth].days.find( e => { 
-      if( e.fullDate===selected.fullDate ){
-        if( e.isSelected === false && e.isSaturday === false && e.isSunday === false ) e.isSelected = true
-        else e.isSelected = false;
+    // 2. set that day selected if it's not weekend or holiday
+    this.year.months[selectedMonth].days.find( day => { 
+      if( day.fullDate===selected.fullDate ){
+        debugger;
+        // not weekend, not some holiday:
+        if( day.isSelected === false && day.isSaturday === false && day.isSunday === false ) day.isSelected = true;
+        else day.isSelected = false;
       }
     });
 
+    // 
     let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
+    console.log(find);
 
     if( find === undefined ){
       this.persistentData.daysSelected.push(selected);
