@@ -35,7 +35,6 @@
 <div class="row">
     <div class="col-3">
         <div class="holidayform">
-            Ile dni urlopu posiadasz?
             <mat-form-field appearance="outline" class="mat-form-field-outcome">
                 <mat-label>Ile masz dni urlopu?</mat-label>
                 <input matInput placeholder="duzo, malo?" [(ngModel)]="persistentData.userFreeVacationDays" >
@@ -52,8 +51,9 @@
     </div>
     <div class="col-3">
         <div class="year-switcher">
-            <li>Wykorzystane dni urlopowe: </li>
-            <li>Pozostałe dni urlopowe: </li>
+            <li>Ilość urlopu: {{persistentData.userFreeVacationDays}}</li>
+            <li>Wykorzystane dni urlopowe: {{persistentData.userUsedVacationDays}}</li>
+            <li>Pozostałe dni urlopowe: {{persistentData.userRemainVacationDays}}</li>
         </div>
     </div>
 </div>

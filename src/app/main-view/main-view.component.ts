@@ -3,7 +3,6 @@ import { Day } from '../models/day';
 import { Month } from '../models/month';
 import { Year } from '../models/year';
 import { LocalData } from '../local-data';
-import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-main-view',
@@ -53,6 +52,7 @@ export class MainViewComponent implements OnInit{
   findRuchomeSwieta(){
     return this.findWielkanoc();
   }
+
   findWielkanoc(){
     let a, b, c, d, e, f, g, h, i, k, l, m, p;
   
@@ -136,7 +136,7 @@ export class MainViewComponent implements OnInit{
 
     this.year.months[selectedMonth].days.find( e => { 
       if( e.fullDate===selected.fullDate ){
-        if( e.isSelected === false ) e.isSelected = true
+        if( e.isSelected === false && e.isSaturday === false && e.isSunday === false ) e.isSelected = true
         else e.isSelected = false;
       }
     });
@@ -145,10 +145,14 @@ export class MainViewComponent implements OnInit{
 
     if( find === undefined ){
       this.persistentData.daysSelected.push(selected);
+      this.persistentData.userRemainVacationDays--;
+      this.persistentData.userUsedVacationDays++;
     } else {
       console.log(selected.fullDate + " element exists. Deleting...");
       console.log(this.persistentData.daysSelected.indexOf(find));
       this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
+      this.persistentData.userRemainVacationDays++;
+      this.persistentData.userUsedVacationDays--;
     }
     this.saveLocal(this.persistentData);
   }
