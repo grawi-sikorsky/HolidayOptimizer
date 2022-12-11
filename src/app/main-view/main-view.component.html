@@ -63,7 +63,7 @@
     <div class="month" *ngFor="let month of this.months; let i=index">
         {{ miesiaceCaptions[i] }}
 
-        <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="isDaySelected($event)">
+        <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="selectDay($event)">
         </app-month>
     </div>
 
