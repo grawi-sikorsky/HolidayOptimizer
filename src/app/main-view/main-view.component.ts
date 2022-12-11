@@ -21,19 +21,16 @@ export class MainViewComponent implements OnInit{
     this.loadSelectedFromLocalData();
   }
   ngOnChanges() {
-    console.log("ng on changes main view");
-    this.updateCallendar();
   }
 
-  months:number[] = new Array(12);
+  months:number[] = new Array(12); // fake array to iterate in html
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
   year:Year = new Year();
-  date = new Date();
   persistentData:LocalData = new LocalData();
 
   fillCalendar(){
     this.year.months.splice(0);
-    this.year.year = this.persistentData.lastYear;
+    this.year.year = this.persistentData.lastSelectedYear;
     this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
     console.log("First day of year: " + this.year.firstDayOfYear);
 
@@ -47,13 +44,10 @@ export class MainViewComponent implements OnInit{
         this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
     }
-    console.log("DATA YEAR: ");
-    console.log( this.year );
-
     this.findRuchomeSwieta();
   }
+
   updateCallendar(){
-    console.log(this.year);
   }
 
   findRuchomeSwieta(){
@@ -101,12 +95,10 @@ export class MainViewComponent implements OnInit{
     let mshift = day;
 
     while(daysLeft > 1){
-
       if(this.year.months[month+monthShift].days.length <= mshift){
         mshift = 0;
         monthShift++;
       }
-
       if(daysLeft === 12){ // po drodze wbijamy zielone swiatki (+49)
         this.year.months[month+monthShift].days[mshift].isHoliday = true;
       }
@@ -125,7 +117,7 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
-    this.persistentData.lastYear = temp;
+    this.persistentData.lastSelectedYear = temp;
     this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
@@ -133,13 +125,13 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year+1;
     this.year = new Year();
     this.year.year = temp;
-    this.persistentData.lastYear = temp;
+    this.persistentData.lastSelectedYear = temp;
     this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
 
   isDaySelected(selected:Day){
-
+    // 1. get month of selected day
     let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
 
     this.year.months[selectedMonth].days.find( e => { 
@@ -148,8 +140,6 @@ export class MainViewComponent implements OnInit{
         else e.isSelected = false;
       }
     });
-    console.log("days before: ");
-    console.log(this.persistentData.daysSelected);
 
     let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
 
@@ -161,11 +151,8 @@ export class MainViewComponent implements OnInit{
       this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
     }
     this.saveLocal(this.persistentData);
-    console.log("days end: ");
-    console.log(this.persistentData.daysSelected);
   }
 
-  // trzeba to obserwowac..
   loadSelectedFromLocalData(){
     this.loadLocal();
     this.persistentData.daysSelected.forEach( loadedDay => {

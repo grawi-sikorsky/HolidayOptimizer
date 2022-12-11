@@ -2,10 +2,13 @@ import { Day } from "./models/day";
 
 export class LocalData {
     daysSelected:Day[] = [];
+    
     //other stuff
-    lastYear:number;
+    lastSelectedYear:number;
+
+    userFreeVacationDays:number = 0;
 
     constructor(){
-        this.lastYear = new Date().getFullYear();
+        this.lastSelectedYear = new Date().getFullYear();
     }
 }

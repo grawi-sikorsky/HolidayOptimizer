@@ -31,29 +31,45 @@
     a:hover {
         color: #125699;
     }
-
-
-
 </style>
-
-<div class="year-switcher"> 
-    <h2>Rok {{this.year.year}} </h2>
-    <button mat-stroked-button color="primary" (click)="prevYear()"><</button>
-    <button mat-stroked-button color="primary" (click)="nextYear()">></button>
-    <button mat-stroked-button color="primary" (click)="loadSelectedFromLocalData()">laduj selecty</button>
+<div class="row">
+    <div class="col-3">
+        <div class="holidayform">
+            Ile dni urlopu posiadasz?
+            <mat-form-field appearance="outline" class="mat-form-field-outcome">
+                <mat-label>Ile masz dni urlopu?</mat-label>
+                <input matInput placeholder="duzo, malo?" [(ngModel)]="persistentData.userFreeVacationDays" >
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="year-switcher">
+            <h2>Rok {{this.year.year}} </h2>
+            <button mat-stroked-button color="primary" (click)="prevYear()"> < </button>
+            <button mat-stroked-button color="primary" (click)="nextYear()">></button>
+            <button mat-stroked-button color="primary" (click)="loadSelectedFromLocalData()"> Gites urlopik </button>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="year-switcher">
+            <li>Wykorzystane dni urlopowe: </li>
+            <li>Pozostałe dni urlopowe: </li>
+        </div>
+    </div>
 </div>
+
 <div class="year text-center">
 
-        <div class="month" *ngFor="let month of this.months; let i=index">
-            {{ miesiaceCaptions[i] }}
-            
-            <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="isDaySelected($event)">
-            </app-month>
-        </div>
+    <div class="month" *ngFor="let month of this.months; let i=index">
+        {{ miesiaceCaptions[i] }}
+
+        <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="isDaySelected($event)">
+        </app-month>
+    </div>
 
 
 
-</div>   
+</div>
 <div>
 
     <!-- Day selected: {{daySelected}} -->
