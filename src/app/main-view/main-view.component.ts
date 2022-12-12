@@ -15,9 +15,9 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    this.loadLocal();
+    this.loadLocalData();
     this.fillCalendar();
-    this.loadSelectedFromLocalData();
+    this.loadSelectedDaysFromLocalData();
   }
   ngOnChanges() {
     
@@ -171,27 +171,18 @@ export class MainViewComponent implements OnInit{
   }
 
   addVacationDay(selected:Day){
-    
     this.persistentData.daysSelected.push(selected);
-
-    this.persistentData.userRemainVacationDays--;
-    this.persistentData.userUsedVacationDays++;
   }
 
   removeVacationDay(selected:Day){
     let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
-    console.log(find);
-    console.log(selected.fullDate + " element exists. Deleting...");
-    console.log(this.persistentData.daysSelected.indexOf(find!));
     this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find!),1);
-    this.persistentData.userRemainVacationDays++;
-    this.persistentData.userUsedVacationDays--;
   }
 
-  loadSelectedFromLocalData(){
-    this.loadLocal();
-    this.persistentData.daysSelected.forEach( loadedDay => {
+  loadSelectedDaysFromLocalData(){
+    this.loadLocalData();
 
+    this.persistentData.daysSelected.forEach( loadedDay => {
       let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
 
       this.year.months[selectedMonth].days.find( existingDay => { 
@@ -201,19 +192,35 @@ export class MainViewComponent implements OnInit{
       });
     });
 
-    // 
-    this.persistentData.userRemainVacationDays = this.persistentData.userFreeVacationDays;
+    this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
+
+    this.calculateVacationDays();
   }
   
-  deselectAll(){
+  calculateVacationDays(){
+    this.persistentData.daysSelected.forEach( loadedDay => {
+      if(loadedDay.year === this.persistentData.lastSelectedYear.toString()){
+        this.year.vacationDaysUsed++;
+      }
+    })
 
+    this.year.vacationDaysRemain = this.year.vacationDays - this.year.vacationDaysUsed;
+    console.log(this.year.vacationDaysUsed);
+  }
+
+  deselectAll(){
+  }
+
+  onChange(){
+    this.persistentData.vacationDays.set(this.year.year, this.year.vacationDays);
+    this.saveLocal(this.persistentData);
   }
 
   saveLocal(data:LocalData){ //todo: savelocal bez parametru, wewnatrz poprzepisuje wszystko z klasy Year do persistenstorage.
     localStorage.setItem("localData", JSON.stringify(data));
   }
 
-  loadLocal(){
+  loadLocalData(){
     if(localStorage.getItem("localData") !== null){
       this.persistentData = JSON.parse(localStorage.getItem("localData")!);
     }
