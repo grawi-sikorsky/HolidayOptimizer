@@ -45,7 +45,6 @@ export class MainViewComponent implements OnInit{
       }
     }
     this.findHolidays();
-    //this.findRuchomeSwieta();
   }
 
   updateCallendar(){
@@ -172,6 +171,7 @@ export class MainViewComponent implements OnInit{
   }
 
   addVacationDay(selected:Day){
+    
     this.persistentData.daysSelected.push(selected);
 
     this.persistentData.userRemainVacationDays--;
