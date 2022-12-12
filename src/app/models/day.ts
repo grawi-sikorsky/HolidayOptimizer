@@ -11,5 +11,5 @@ export class Day {
     year:string="";
     fullDate:string="";
 
-    constructor(day:string){ this.day = day }
+    constructor( day:string ){ this.day = day }
 }
