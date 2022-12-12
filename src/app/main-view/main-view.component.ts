@@ -20,6 +20,7 @@ export class MainViewComponent implements OnInit{
     this.loadSelectedFromLocalData();
   }
   ngOnChanges() {
+    
   }
 
   months:number[] = new Array(12); // fake array to iterate in html
@@ -136,30 +137,39 @@ export class MainViewComponent implements OnInit{
 
     // 2. set that day selected if it's not weekend or holiday
     this.year.months[selectedMonth].days.find( day => { 
-      if( day.fullDate===selected.fullDate ){
-        debugger;
-        // not weekend, not some holiday:
-        if( day.isSelected === false && day.isSaturday === false && day.isSunday === false ) day.isSelected = true;
-        else day.isSelected = false;
+      if( day.fullDate === selected.fullDate ){
+
+        // not weekend, not some holiday, so can be selected:
+        if( !day.isSelected && !day.isSaturday && !day.isSunday && !day.isHoliday ){
+          day.isSelected = true;
+          this.addVacationDay(selected);
+        }
+        // already selected -> deselect
+        else if (day.isSelected === true){ 
+          day.isSelected = false;
+          this.removeVacationDay(selected);
+        }
       }
     });
 
-    // 
+    this.saveLocal(this.persistentData);
+  }
+
+  addVacationDay(selected:Day){
+    this.persistentData.daysSelected.push(selected);
+
+    this.persistentData.userRemainVacationDays--;
+    this.persistentData.userUsedVacationDays++;
+  }
+
+  removeVacationDay(selected:Day){
     let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
     console.log(find);
-
-    if( find === undefined ){
-      this.persistentData.daysSelected.push(selected);
-      this.persistentData.userRemainVacationDays--;
-      this.persistentData.userUsedVacationDays++;
-    } else {
-      console.log(selected.fullDate + " element exists. Deleting...");
-      console.log(this.persistentData.daysSelected.indexOf(find));
-      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
-      this.persistentData.userRemainVacationDays++;
-      this.persistentData.userUsedVacationDays--;
-    }
-    this.saveLocal(this.persistentData);
+    console.log(selected.fullDate + " element exists. Deleting...");
+    console.log(this.persistentData.daysSelected.indexOf(find!));
+    this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find!),1);
+    this.persistentData.userRemainVacationDays++;
+    this.persistentData.userUsedVacationDays--;
   }
 
   loadSelectedFromLocalData(){
@@ -169,11 +179,14 @@ export class MainViewComponent implements OnInit{
       let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
 
       this.year.months[selectedMonth].days.find( existingDay => { 
-        if( existingDay.fullDate===loadedDay.fullDate ){
+        if( existingDay.fullDate === loadedDay.fullDate ){
           existingDay.isSelected = true
         }
       });
     });
+
+    // 
+    this.persistentData.userRemainVacationDays = this.persistentData.userFreeVacationDays;
   }
   
   deselectAll(){
