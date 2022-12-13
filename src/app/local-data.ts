@@ -1,5 +1,4 @@
-import { Day } from "./models/day";
-import { Year } from './models/year';
+import { Day } from './models/day';
 
 export class LocalData {
     daysSelected:Day[] = [];
@@ -7,11 +6,12 @@ export class LocalData {
     //other stuff
     lastSelectedYear:number;
 
-    vacationDays = new Map();
+    vacationDays:Map<number, number>;
     vacationDaysUsed:number = 0;
     vacationDaysRemain:number = 0;
 
     constructor(){
         this.lastSelectedYear = new Date().getFullYear();
+        this.vacationDays = new Map<number, number>();
     }
 }

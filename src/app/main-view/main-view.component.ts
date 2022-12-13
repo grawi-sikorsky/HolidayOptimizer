@@ -192,7 +192,7 @@ export class MainViewComponent implements OnInit{
       });
     });
 
-    this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
+    
 
     this.calculateVacationDays();
   }
@@ -212,6 +212,7 @@ export class MainViewComponent implements OnInit{
   }
 
   onChange(){
+    debugger;
     this.persistentData.vacationDays.set(this.year.year, this.year.vacationDays);
     this.saveLocal(this.persistentData);
   }
@@ -223,6 +224,8 @@ export class MainViewComponent implements OnInit{
   loadLocalData(){
     if(localStorage.getItem("localData") !== null){
       this.persistentData = JSON.parse(localStorage.getItem("localData")!);
+
+      this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
     }
   }
 } 
