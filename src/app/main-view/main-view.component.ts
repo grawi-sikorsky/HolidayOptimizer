@@ -225,7 +225,7 @@ export class MainViewComponent implements OnInit{
     if(localStorage.getItem("localData") !== null){
       this.persistentData = JSON.parse(localStorage.getItem("localData")!);
 
-      this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
+      //this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
     }
   }
 } 

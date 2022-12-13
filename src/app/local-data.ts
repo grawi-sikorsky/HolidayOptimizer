@@ -6,7 +6,7 @@ export class LocalData {
     //other stuff
     lastSelectedYear:number;
 
-    vacationDays:Map<number, number>;
+    vacationDays:Map<number,number>;
     vacationDaysUsed:number = 0;
     vacationDaysRemain:number = 0;
 
