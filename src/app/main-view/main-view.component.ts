@@ -3,7 +3,6 @@ import { Day } from '../models/day';
 import { Month } from '../models/month';
 import { Year } from '../models/year';
 import { LocalData } from '../local-data';
-import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-main-view',
@@ -16,49 +15,45 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    this.loadLocal();
+    this.loadLocalData();
     this.fillCalendar();
-    this.loadSelectedFromLocalData();
+    this.loadSelectedDaysFromLocalData();
   }
   ngOnChanges() {
-    console.log("ng on changes main view");
-    this.updateCallendar();
+    
   }
 
-  months:number[] = new Array(12);
+  months:number[] = new Array(12); // fake array to iterate in html
   miesiaceCaptions = ["Styczeń", "Luty", "Marzec", "Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
   year:Year = new Year();
-  date = new Date();
   persistentData:LocalData = new LocalData();
 
   fillCalendar(){
-    this.year.months.splice(0);
-    this.year.year = this.persistentData.lastYear;
-    this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
-    console.log("First day of year: " + this.year.firstDayOfYear);
+    this.year.months.splice(0); //clear data
+    this.year.year = this.persistentData.lastSelectedYear;
+    // this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
+    // console.log("First day of year: " + this.year.firstDayOfYear);
 
-    for(let i=0; i<this.months.length; i++){  // dla kazdego miesiaca
-      this.year.months.push( new Month( (i+1).toString() ) ); // dodaj nowy miesiac
-      let daysInMonth = new Date(this.year.year, i+1, 0).getDate();  // sprawdz ilosc dni danego miesiaca
-      for(let j = 0; j<daysInMonth; j++){     // dodaj kazdy dzien dla danego miesiaca
-        this.year.months[i].days.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
-        this.year.months[i].days[j].month = (i+1).toString();
+    for(let i=0; i<this.months.length; i++){                            // dla kazdego miesiaca
+      this.year.months.push( new Month( (i+1).toString() ) );           // dodaj nowy miesiac
+      let daysInMonth = new Date(this.year.year, i+1, 0).getDate();     // sprawdz ilosc dni danego miesiaca
+      for(let j = 0; j<daysInMonth; j++){                               // dodaj kazdy dzien dla danego miesiaca
+        this.year.months[i].days.push ( new Day( (j+1).toString() ) );  // +1 bo dni nie zaczynaja sie od '0'
+        this.year.months[i].days[j].month = (i+1).toString();           
         this.year.months[i].days[j].year = this.year.year.toString();
         this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
     }
-    console.log("DATA YEAR: ");
-    console.log( this.year );
-
-    this.findRuchomeSwieta();
+    this.findHolidays();
   }
+
   updateCallendar(){
-    console.log(this.year);
   }
 
   findRuchomeSwieta(){
     return this.findWielkanoc();
   }
+
   findWielkanoc(){
     let a, b, c, d, e, f, g, h, i, k, l, m, p;
   
@@ -101,12 +96,10 @@ export class MainViewComponent implements OnInit{
     let mshift = day;
 
     while(daysLeft > 1){
-
       if(this.year.months[month+monthShift].days.length <= mshift){
         mshift = 0;
         monthShift++;
       }
-
       if(daysLeft === 12){ // po drodze wbijamy zielone swiatki (+49)
         this.year.months[month+monthShift].days[mshift].isHoliday = true;
       }
@@ -120,12 +113,27 @@ export class MainViewComponent implements OnInit{
     return wielkanoc;
   }
 
+  findHolidays(){
+      this.year.months[0].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // styczen: nowy rok
+      this.year.months[0].days.find( e => { if(e.day==="6") e.isHoliday = true } );      // styczen: 'szesciu' kroli
+      this.year.months[4].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // maj: sw pracy
+      this.year.months[4].days.find( e => { if(e.day==="3") e.isHoliday = true } );      // maj: konstytuszyn
+      this.year.months[7].days.find( e => { if(e.day==="15") e.isHoliday = true } );     // sierpien: wniebowziecie
+      this.year.months[10].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // listopad: wszystkich swintych
+      this.year.months[10].days.find( e => { if(e.day==="11") e.isHoliday = true } );     // listopad: niepodleglosc
+      this.year.months[11].days.find( e => { if(e.day==="24") e.isHoliday = true } );     // grudzien: wigilia
+      this.year.months[11].days.find( e => { if(e.day==="25") e.isHoliday = true } );     // grudzien: 1 day
+      this.year.months[11].days.find( e => { if(e.day==="26") e.isHoliday = true } );     // grudzien: 2 day
+
+      this.findRuchomeSwieta();
+  }
+
 
   prevYear(){
     let temp = this.year.year-1;
     this.year = new Year();
     this.year.year = temp;
-    this.persistentData.lastYear = temp;
+    this.persistentData.lastSelectedYear = temp;
     this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
@@ -133,64 +141,91 @@ export class MainViewComponent implements OnInit{
     let temp = this.year.year+1;
     this.year = new Year();
     this.year.year = temp;
-    this.persistentData.lastYear = temp;
+    this.persistentData.lastSelectedYear = temp;
     this.saveLocal(this.persistentData);
     this.ngOnInit();
   }
 
-  isDaySelected(selected:Day){
-
+  selectDay(selected:Day){
+    // 1. get month of selected day
     let selectedMonth = Number(this.year.months[Number(selected.month)-1].month)-1;
 
-    this.year.months[selectedMonth].days.find( e => { 
-      if( e.fullDate===selected.fullDate ){
-        if( e.isSelected === false ) e.isSelected = true
-        else e.isSelected = false;
+    // 2. set that day selected if it's not weekend or holiday
+    this.year.months[selectedMonth].days.find( day => { 
+      if( day.fullDate === selected.fullDate ){
+
+        // not weekend, not some holiday, so can be selected:
+        if( !day.isSelected && !day.isSaturday && !day.isSunday && !day.isHoliday ){
+          day.isSelected = true;
+          this.addVacationDay(selected);
+        }
+        // already selected -> deselect
+        else if (day.isSelected === true){ 
+          day.isSelected = false;
+          this.removeVacationDay(selected);
+        }
       }
     });
-    console.log("days before: ");
-    console.log(this.persistentData.daysSelected);
 
-    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
-
-    if( find === undefined ){
-      this.persistentData.daysSelected.push(selected);
-    } else {
-      console.log(selected.fullDate + " element exists. Deleting...");
-      console.log(this.persistentData.daysSelected.indexOf(find));
-      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
-    }
     this.saveLocal(this.persistentData);
-    console.log("days end: ");
-    console.log(this.persistentData.daysSelected);
   }
 
-  // trzeba to obserwowac..
-  loadSelectedFromLocalData(){
-    this.loadLocal();
-    this.persistentData.daysSelected.forEach( loadedDay => {
+  addVacationDay(selected:Day){
+    this.persistentData.daysSelected.push(selected);
+  }
 
+  removeVacationDay(selected:Day){
+    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
+    this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find!),1);
+  }
+
+  loadSelectedDaysFromLocalData(){
+    this.loadLocalData();
+
+    this.persistentData.daysSelected.forEach( loadedDay => {
       let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
 
       this.year.months[selectedMonth].days.find( existingDay => { 
-        if( existingDay.fullDate===loadedDay.fullDate ){
+        if( existingDay.fullDate === loadedDay.fullDate ){
           existingDay.isSelected = true
         }
       });
     });
+
+    
+
+    this.calculateVacationDays();
   }
   
-  deselectAll(){
+  calculateVacationDays(){
+    this.persistentData.daysSelected.forEach( loadedDay => {
+      if(loadedDay.year === this.persistentData.lastSelectedYear.toString()){
+        this.year.vacationDaysUsed++;
+      }
+    })
 
+    this.year.vacationDaysRemain = this.year.vacationDays - this.year.vacationDaysUsed;
+    console.log(this.year.vacationDaysUsed);
+  }
+
+  deselectAll(){
+  }
+
+  onChange(){
+    debugger;
+    this.persistentData.vacationDays.set(this.year.year, this.year.vacationDays);
+    this.saveLocal(this.persistentData);
   }
 
   saveLocal(data:LocalData){ //todo: savelocal bez parametru, wewnatrz poprzepisuje wszystko z klasy Year do persistenstorage.
     localStorage.setItem("localData", JSON.stringify(data));
   }
 
-  loadLocal(){
+  loadLocalData(){
     if(localStorage.getItem("localData") !== null){
       this.persistentData = JSON.parse(localStorage.getItem("localData")!);
+
+      //this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
     }
   }
 } 
