@@ -37,7 +37,7 @@
         <div class="holidayform">
             <mat-form-field appearance="outline" class="mat-form-field-outcome">
                 <mat-label>Ile masz dni urlopu?</mat-label>
-                <input matInput placeholder="duzo, malo?" [(ngModel)]="persistentData.userFreeVacationDays" >
+                <input matInput placeholder="duzo, malo?" [(ngModel)]="this.year.vacationDays" (input)="onChange()" >
             </mat-form-field>
         </div>
     </div>
@@ -46,14 +46,14 @@
             <h2>Rok {{this.year.year}} </h2>
             <button mat-stroked-button color="primary" (click)="prevYear()"> < </button>
             <button mat-stroked-button color="primary" (click)="nextYear()">></button>
-            <button mat-stroked-button color="primary" (click)="loadSelectedFromLocalData()"> Gites urlopik </button>
+            <button mat-stroked-button color="primary" (click)="loadSelectedDaysFromLocalData()"> Gites urlopik </button>
         </div>
     </div>
     <div class="col-3">
         <div class="year-switcher">
-            <li>Ilość urlopu: {{persistentData.userFreeVacationDays}}</li>
-            <li>Wykorzystane dni urlopowe: {{persistentData.userUsedVacationDays}}</li>
-            <li>Pozostałe dni urlopowe: {{persistentData.userRemainVacationDays}}</li>
+            <li>Ilość urlopu: {{this.year.vacationDays}}</li>
+            <li>Wykorzystane dni urlopowe: {{this.year.vacationDaysUsed}}</li>
+            <li>Pozostałe dni urlopowe: {{this.year.vacationDaysRemain}}</li>
         </div>
     </div>
 </div>

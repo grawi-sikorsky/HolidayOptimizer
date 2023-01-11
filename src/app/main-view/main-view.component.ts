@@ -15,11 +15,12 @@ export class MainViewComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    this.loadLocal();
+    this.loadLocalData();
     this.fillCalendar();
-    this.loadSelectedFromLocalData();
+    this.loadSelectedDaysFromLocalData();
   }
   ngOnChanges() {
+    
   }
 
   months:number[] = new Array(12); // fake array to iterate in html
@@ -28,22 +29,22 @@ export class MainViewComponent implements OnInit{
   persistentData:LocalData = new LocalData();
 
   fillCalendar(){
-    this.year.months.splice(0);
+    this.year.months.splice(0); //clear data
     this.year.year = this.persistentData.lastSelectedYear;
-    this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
-    console.log("First day of year: " + this.year.firstDayOfYear);
+    // this.year.firstDayOfYear = new Date(this.year.year, 0, 1 );
+    // console.log("First day of year: " + this.year.firstDayOfYear);
 
-    for(let i=0; i<this.months.length; i++){  // dla kazdego miesiaca
-      this.year.months.push( new Month( (i+1).toString() ) ); // dodaj nowy miesiac
-      let daysInMonth = new Date(this.year.year, i+1, 0).getDate();  // sprawdz ilosc dni danego miesiaca
-      for(let j = 0; j<daysInMonth; j++){     // dodaj kazdy dzien dla danego miesiaca
-        this.year.months[i].days.push ( new Day( (j+1).toString() ) ); // +1 bo dni nie zaczynaja sie od '0'
-        this.year.months[i].days[j].month = (i+1).toString();
+    for(let i=0; i<this.months.length; i++){                            // dla kazdego miesiaca
+      this.year.months.push( new Month( (i+1).toString() ) );           // dodaj nowy miesiac
+      let daysInMonth = new Date(this.year.year, i+1, 0).getDate();     // sprawdz ilosc dni danego miesiaca
+      for(let j = 0; j<daysInMonth; j++){                               // dodaj kazdy dzien dla danego miesiaca
+        this.year.months[i].days.push ( new Day( (j+1).toString() ) );  // +1 bo dni nie zaczynaja sie od '0'
+        this.year.months[i].days[j].month = (i+1).toString();           
         this.year.months[i].days[j].year = this.year.year.toString();
         this.year.months[i].days[j].fullDate = String( j+1+"."+(i+1)+"."+this.year.year );
       }
     }
-    this.findRuchomeSwieta();
+    this.findHolidays();
   }
 
   updateCallendar(){
@@ -112,6 +113,21 @@ export class MainViewComponent implements OnInit{
     return wielkanoc;
   }
 
+  findHolidays(){
+      this.year.months[0].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // styczen: nowy rok
+      this.year.months[0].days.find( e => { if(e.day==="6") e.isHoliday = true } );      // styczen: 'szesciu' kroli
+      this.year.months[4].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // maj: sw pracy
+      this.year.months[4].days.find( e => { if(e.day==="3") e.isHoliday = true } );      // maj: konstytuszyn
+      this.year.months[7].days.find( e => { if(e.day==="15") e.isHoliday = true } );     // sierpien: wniebowziecie
+      this.year.months[10].days.find( e => { if(e.day==="1") e.isHoliday = true } );      // listopad: wszystkich swintych
+      this.year.months[10].days.find( e => { if(e.day==="11") e.isHoliday = true } );     // listopad: niepodleglosc
+      this.year.months[11].days.find( e => { if(e.day==="24") e.isHoliday = true } );     // grudzien: wigilia
+      this.year.months[11].days.find( e => { if(e.day==="25") e.isHoliday = true } );     // grudzien: 1 day
+      this.year.months[11].days.find( e => { if(e.day==="26") e.isHoliday = true } );     // grudzien: 2 day
+
+      this.findRuchomeSwieta();
+  }
+
 
   prevYear(){
     let temp = this.year.year-1;
@@ -136,57 +152,80 @@ export class MainViewComponent implements OnInit{
 
     // 2. set that day selected if it's not weekend or holiday
     this.year.months[selectedMonth].days.find( day => { 
-      if( day.fullDate===selected.fullDate ){
-        debugger;
-        // not weekend, not some holiday:
-        if( day.isSelected === false && day.isSaturday === false && day.isSunday === false ) day.isSelected = true;
-        else day.isSelected = false;
+      if( day.fullDate === selected.fullDate ){
+
+        // not weekend, not some holiday, so can be selected:
+        if( !day.isSelected && !day.isSaturday && !day.isSunday && !day.isHoliday ){
+          day.isSelected = true;
+          this.addVacationDay(selected);
+        }
+        // already selected -> deselect
+        else if (day.isSelected === true){ 
+          day.isSelected = false;
+          this.removeVacationDay(selected);
+        }
       }
     });
 
-    // 
-    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
-    console.log(find);
-
-    if( find === undefined ){
-      this.persistentData.daysSelected.push(selected);
-      this.persistentData.userRemainVacationDays--;
-      this.persistentData.userUsedVacationDays++;
-    } else {
-      console.log(selected.fullDate + " element exists. Deleting...");
-      console.log(this.persistentData.daysSelected.indexOf(find));
-      this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find),1);
-      this.persistentData.userRemainVacationDays++;
-      this.persistentData.userUsedVacationDays--;
-    }
     this.saveLocal(this.persistentData);
   }
 
-  loadSelectedFromLocalData(){
-    this.loadLocal();
-    this.persistentData.daysSelected.forEach( loadedDay => {
+  addVacationDay(selected:Day){
+    this.persistentData.daysSelected.push(selected);
+  }
 
+  removeVacationDay(selected:Day){
+    let find = this.persistentData.daysSelected.find( f => { return f.fullDate == selected.fullDate } );
+    this.persistentData.daysSelected.splice(this.persistentData.daysSelected.indexOf(find!),1);
+  }
+
+  loadSelectedDaysFromLocalData(){
+    this.loadLocalData();
+
+    this.persistentData.daysSelected.forEach( loadedDay => {
       let selectedMonth = Number(this.year.months[Number(loadedDay.month)-1].month)-1;
 
       this.year.months[selectedMonth].days.find( existingDay => { 
-        if( existingDay.fullDate===loadedDay.fullDate ){
+        if( existingDay.fullDate === loadedDay.fullDate ){
           existingDay.isSelected = true
         }
       });
     });
+
+    
+
+    this.calculateVacationDays();
   }
   
-  deselectAll(){
+  calculateVacationDays(){
+    this.persistentData.daysSelected.forEach( loadedDay => {
+      if(loadedDay.year === this.persistentData.lastSelectedYear.toString()){
+        this.year.vacationDaysUsed++;
+      }
+    })
 
+    this.year.vacationDaysRemain = this.year.vacationDays - this.year.vacationDaysUsed;
+    console.log(this.year.vacationDaysUsed);
+  }
+
+  deselectAll(){
+  }
+
+  onChange(){
+    debugger;
+    this.persistentData.vacationDays.set(this.year.year, this.year.vacationDays);
+    this.saveLocal(this.persistentData);
   }
 
   saveLocal(data:LocalData){ //todo: savelocal bez parametru, wewnatrz poprzepisuje wszystko z klasy Year do persistenstorage.
     localStorage.setItem("localData", JSON.stringify(data));
   }
 
-  loadLocal(){
+  loadLocalData(){
     if(localStorage.getItem("localData") !== null){
       this.persistentData = JSON.parse(localStorage.getItem("localData")!);
+
+      //this.year.vacationDays = this.persistentData.vacationDays.get(this.year.year)!;
     }
   }
 } 
