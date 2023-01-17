@@ -1,76 +1,49 @@
-<style>
-    :host {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        font-size: 14px;
-        color: #333;
-        box-sizing: border-box;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        margin: 8px 0;
-    }
+<div class="body-wrapper">
+  <div class="content-wrapper">
 
-    p {
-        margin: 0;
-    }
-
-    a,
-    a:visited,
-    a:hover {
-        color: #1976d2;
-        text-decoration: none;
-    }
-
-    a:hover {
-        color: #125699;
-    }
-</style>
-<div class="row">
-    <div class="col-3">
-        <div class="holidayform">
-            <mat-form-field appearance="outline" class="mat-form-field-outcome">
-                <mat-label>Ile masz dni urlopu?</mat-label>
-                <input matInput placeholder="duzo, malo?" [(ngModel)]="this.year.vacationDays" (input)="onChange()" >
-            </mat-form-field>
+    <div class="row">
+        <div class="col-3">
+            <div class="holidayform">
+                <mat-form-field appearance="outline" class="mat-form-field-outcome">
+                    <mat-label>Ile masz dni urlopu?</mat-label>
+                    <input matInput placeholder="duzo, malo?" [(ngModel)]="this.year.vacationDays" (input)="onChange()" >
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="year-switcher">
+                <h2>Rok {{this.year.year}} </h2>
+                <button mat-stroked-button color="primary" (click)="prevYear()"> < </button>
+                <button mat-stroked-button color="primary" (click)="nextYear()">></button>
+                <button mat-stroked-button color="primary" (click)="loadSelectedDaysFromLocalData()"> Gites urlopik </button>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="year-switcher">
+                <li>Ilość urlopu: {{this.year.vacationDays}}</li>
+                <li>Wykorzystane dni urlopowe: {{this.year.vacationDaysUsed}}</li>
+                <li>Pozostałe dni urlopowe: {{this.year.vacationDaysRemain}}</li>
+            </div>
         </div>
     </div>
-    <div class="col-6">
-        <div class="year-switcher">
-            <h2>Rok {{this.year.year}} </h2>
-            <button mat-stroked-button color="primary" (click)="prevYear()"> < </button>
-            <button mat-stroked-button color="primary" (click)="nextYear()">></button>
-            <button mat-stroked-button color="primary" (click)="loadSelectedDaysFromLocalData()"> Gites urlopik </button>
+
+    <div class="year text-center">
+        <div class="month" *ngFor="let month of this.months; let i=index">
+            {{ miesiaceCaptions[i] }}
+
+            <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="selectDay($event)">
+            </app-month>
         </div>
     </div>
-    <div class="col-3">
-        <div class="year-switcher">
-            <li>Ilość urlopu: {{this.year.vacationDays}}</li>
-            <li>Wykorzystane dni urlopowe: {{this.year.vacationDaysUsed}}</li>
-            <li>Pozostałe dni urlopowe: {{this.year.vacationDaysRemain}}</li>
-        </div>
-    </div>
-</div>
 
-<div class="year text-center">
+    <div>
 
-    <div class="month" *ngFor="let month of this.months; let i=index">
-        {{ miesiaceCaptions[i] }}
-
-        <app-month [monthToDisplay]="i" [yearSelected]="this.year" (selectedDay)="selectDay($event)">
-        </app-month>
+        <!-- Day selected: {{daySelected}} -->
     </div>
 
+  </div>
 
+  <app-footer></app-footer>
 
-</div>
-<div>
-
-    <!-- Day selected: {{daySelected}} -->
 </div>
