@@ -2,7 +2,9 @@
 Simple Calendar with polish holidays to automaticaly find, select and sum holidays needed to fill all 'gaps' between weekends and holidays.
 User can either manually select days and check how many free days from available is needed to have "long weekend".
 
-Live version: https://holidays-prod-b2b-calculator-caj6kl.mo2.mogenius.io/
+Live version: <br>
+https://holidays-prod-b2b-calculator-caj6kl.mo2.mogenius.io/ <br>
+https://holidays.grawires.pl/
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.2.
 
