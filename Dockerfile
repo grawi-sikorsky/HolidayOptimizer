@@ -8,3 +8,5 @@ RUN npm run build --prod
 #stage 2
 FROM nginx:alpine
 COPY --from=node /app/dist/holiday-optimizer /usr/share/nginx/html
+
+EXPOSE 80
